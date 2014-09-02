@@ -2,6 +2,7 @@ package com.czeczotka.junit;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TestName;
 import org.junit.rules.Timeout;
@@ -21,6 +22,8 @@ public class JUnitRulesTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
+    @Rule
+    public ErrorCollector collector = new ErrorCollector();
 
     @Test
     public void printTestMethodName() {
@@ -42,5 +45,12 @@ public class JUnitRulesTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("catch me if you can");
         throw new IllegalArgumentException("catch me if you can");
+    }
+
+    @Test
+    public void errorCollectorExample() {
+        collector.addError(new Throwable("trouble here"));
+        collector.addError(new Throwable("trouble there"));
+        collector.addError(new Throwable("trouble everywhere"));
     }
 }
