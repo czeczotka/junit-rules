@@ -35,6 +35,13 @@ public class JUnitRulesTest {
         Thread.sleep(1000 * 60);
     }
 
+    @Test
+    public void slowTestWithExpectedException() throws InterruptedException {
+        thrown.expect(Exception.class);
+        thrown.expectMessage("test timed out after 20 milliseconds");
+        Thread.sleep(1000 * 60);
+    }
+
     @Test (expected = IllegalArgumentException.class)
     public void exceptionExpected(){
         throw new IllegalArgumentException("catch me if you can");
