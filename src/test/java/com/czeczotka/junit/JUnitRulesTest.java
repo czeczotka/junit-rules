@@ -1,11 +1,10 @@
 package com.czeczotka.junit;
 
+import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ErrorCollector;
-import org.junit.rules.ExpectedException;
-import org.junit.rules.TestName;
-import org.junit.rules.Timeout;
+import org.junit.rules.*;
+import org.junit.runner.Description;
 
 /**
  * @author Jakub Czeczotka
@@ -24,6 +23,21 @@ public class JUnitRulesTest {
 
     @Rule
     public ErrorCollector collector = new ErrorCollector();
+
+    @Rule
+    public TestWatcher watcher = new TestWatcher() {
+        @Override
+        protected void failed(Throwable e, Description description) {
+            report.append("  FAILURE: ").append(description.getMethodName()).append("\n");
+        }
+
+        @Override
+        protected void succeeded(Description description) {
+            report.append("  Success: ").append(description.getMethodName()).append("\n");
+        }
+    };
+
+    private static StringBuilder report = new StringBuilder();
 
     @Test
     public void printTestMethodName() {
@@ -59,5 +73,11 @@ public class JUnitRulesTest {
         collector.addError(new Throwable("trouble here"));
         collector.addError(new Throwable("trouble there"));
         collector.addError(new Throwable("trouble everywhere"));
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+        System.out.println("@AfterClass report");
+        System.out.println(report.toString ());
     }
 }
